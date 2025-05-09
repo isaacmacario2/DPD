@@ -23,7 +23,7 @@ qamModOut = qammod(x,M,"UnitAveragePower",true);
 %% OFDM
 ofdmModOut = ofdmmod(qamModOut/osf,fftLength,cycPrefLen,nullIdx,OversamplingFactor=osf);
 
-% espectro(1024,fs,ofdmModOut,'pwelch')
+% spectrum(1024,fs,ofdmModOut,'pwelch')
 
 %% Salvando a entrada
 ofdmModOut1 = ofdmModOut;
@@ -54,7 +54,7 @@ ofdmModOut1 = ofdmModOut;
 % % ofdmModOut = [ofdmModOut; zeros(100,1)];
 % ofdmModOut = filter(lpf, 1, ofdmModOut);
 
-% espectro(1024,fs_up,ofdmModOut,'pwelch')
+% spectrum(1024,fs_up,ofdmModOut,'pwelch')
 % return
 
 fs_up = fs;
@@ -125,7 +125,7 @@ disp('RMSout = ')
 disp(RMSout)
 
 %% Sincronização
-y_sync = sincronize(ofdmModOut,y_amp,1,1,0);
+y_sync = synchronize(ofdmModOut,y_amp,1,1,0);
 
 y_sync_nodpd = y_sync;
 
@@ -136,7 +136,7 @@ y_sync_nodpd = y_sync;
 % 
 % y_sync1 = resample(y_sync,fs_num, fs_den,5,20);
 % 
-% % espectro(1024,fs_down,y_sync1(2:end),'pwelch')
+% % spectrum(1024,fs_down,y_sync1(2:end),'pwelch')
 
 %% OFDM Demod
 if flag == 0
@@ -196,9 +196,9 @@ switch tipo
    
         [y_amp_dpd,~,~,~] = RFWebLab_PA_meas_v1_2(ofdmModOut_dpd, RMSin);
 
-        % y_sync_dpd = sincronize(ofdmModOut, y_amp, 1, 1, 1);
+        % y_sync_dpd = synchronize(ofdmModOut, y_amp, 1, 1, 1);
 
-        espectro(1024,fs_up,y_amp,'pwelch',y_amp_dpd,'pwelch')
+        spectrum(1024,fs_up,y_amp,'pwelch',y_amp_dpd,'pwelch')
         return
 
     case 2
@@ -219,16 +219,16 @@ switch tipo
 
             u = (w'*X).';
 
-            u = sincronize(ofdmModOut, u, 0, 1, 0);  
+            u = synchronize(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
             
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
@@ -250,16 +250,16 @@ switch tipo
 
             u = (w'*X).';
 
-            u = sincronize(ofdmModOut, u, 1, 1, 0);
+            u = synchronize(ofdmModOut, u, 1, 1, 0);
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
 
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
@@ -280,16 +280,16 @@ switch tipo
             
             u = (w'*X).';
 
-            u = sincronize(ofdmModOut, u, 0, 1, 0);  
+            u = synchronize(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
             
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
 
     case 5
@@ -330,11 +330,11 @@ switch tipo
 
             % PA
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
 
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         return
 
@@ -352,16 +352,16 @@ switch tipo
            
             [a,D,~,~,u] = QKRLS(y_sync_dpd.', u, ofdmModOut.', 0.9999, 0.01, 1, 10000);
            
-            u = sincronize(ofdmModOut, u, 0, 1, 0);  
+            u = synchronize(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
 
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
 
     case 7
@@ -376,16 +376,16 @@ switch tipo
 
             [~,D,~,~,u] = EX_QKRLS(y_sync_dpd.', u, ofdmModOut.', 0.9, 1, 0.01, 0.99999, 1e-4, 0.3, 10000);
 
-            u = sincronize(ofdmModOut, u, 0, 1, 0);  
+            u = synchronize(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
 
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
 
 
@@ -400,16 +400,16 @@ switch tipo
            
             [~,~,~,~,u] = QKLMS(y_sync_dpd.', u, ofdmModOut.', 0.5, 0.5, 0.3, 1000);
 
-            u = sincronize(ofdmModOut, u, 0, 1, 0);  
+            u = synchronize(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
 
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
 
     case 9
@@ -429,16 +429,16 @@ switch tipo
 
             u = (w'*X).';
 
-            u = sincronize(ofdmModOut, u, 0, 1, 0);  
+            u = synchronize(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
             
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
@@ -459,16 +459,16 @@ switch tipo
 
             u = (w'*X).';
 
-            u = sincronize(ofdmModOut, u, 0, 1, 0);  
+            u = synchronize(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
             
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = sincronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        espectro(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
@@ -482,7 +482,7 @@ end
 % 
 % y_sync1_dpd = resample(y_sync_dpd,fs_num, fs_den,5,20);
 % 
-% % espectro(1024,fs_down,y_sync1(2:end),'pwelch',y_sync1_dpd(2:end),'pwelch')
+% % spectrum(1024,fs_down,y_sync1(2:end),'pwelch',y_sync1_dpd(2:end),'pwelch')
 
 %% OFDM demod
 if flag ~= 1
