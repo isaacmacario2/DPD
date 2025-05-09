@@ -1,4 +1,4 @@
-function espectro(N,fs,x1,fun_type1,x2,fun_type2)
+function especter(N,fs,x1,fun_type1,x2,fun_type2)
 
 % Verificar se o segundo sinal foi fornecido 
 if nargin < 6 
