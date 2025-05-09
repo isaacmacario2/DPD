@@ -23,7 +23,7 @@ qamModOut = qammod(x,M,"UnitAveragePower",true);
 %% OFDM
 ofdmModOut = ofdmmod(qamModOut/osf,fftLength,cycPrefLen,nullIdx,OversamplingFactor=osf);
 
-% spectrum(1024,fs,ofdmModOut,'pwelch')
+% spectrumPlot(1024,fs,ofdmModOut,'pwelch')
 
 %% Salvando a entrada
 ofdmModOut1 = ofdmModOut;
@@ -54,7 +54,7 @@ ofdmModOut1 = ofdmModOut;
 % % ofdmModOut = [ofdmModOut; zeros(100,1)];
 % ofdmModOut = filter(lpf, 1, ofdmModOut);
 
-% spectrum(1024,fs_up,ofdmModOut,'pwelch')
+% spectrumPlot(1024,fs_up,ofdmModOut,'pwelch')
 % return
 
 fs_up = fs;
@@ -136,7 +136,7 @@ y_sync_nodpd = y_sync;
 % 
 % y_sync1 = resample(y_sync,fs_num, fs_den,5,20);
 % 
-% % spectrum(1024,fs_down,y_sync1(2:end),'pwelch')
+% % spectrumPlot(1024,fs_down,y_sync1(2:end),'pwelch')
 
 %% OFDM Demod
 if flag == 0
@@ -198,7 +198,7 @@ switch tipo
 
         % y_sync_dpd = synchronize(ofdmModOut, y_amp, 1, 1, 1);
 
-        spectrum(1024,fs_up,y_amp,'pwelch',y_amp_dpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_amp,'pwelch',y_amp_dpd,'pwelch')
         return
 
     case 2
@@ -228,7 +228,7 @@ switch tipo
             y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
@@ -259,7 +259,7 @@ switch tipo
             y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
@@ -289,7 +289,7 @@ switch tipo
             y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
 
     case 5
@@ -334,7 +334,7 @@ switch tipo
 
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         return
 
@@ -361,7 +361,7 @@ switch tipo
             y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
 
     case 7
@@ -385,7 +385,7 @@ switch tipo
             y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
 
 
@@ -409,7 +409,7 @@ switch tipo
             y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
 
     case 9
@@ -438,7 +438,7 @@ switch tipo
             y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
@@ -468,7 +468,7 @@ switch tipo
             y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
         end
 
-        spectrum(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
@@ -482,7 +482,7 @@ end
 % 
 % y_sync1_dpd = resample(y_sync_dpd,fs_num, fs_den,5,20);
 % 
-% % spectrum(1024,fs_down,y_sync1(2:end),'pwelch',y_sync1_dpd(2:end),'pwelch')
+% % spectrumPlot(1024,fs_down,y_sync1(2:end),'pwelch',y_sync1_dpd(2:end),'pwelch')
 
 %% OFDM demod
 if flag ~= 1
