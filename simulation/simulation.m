@@ -23,7 +23,7 @@ qamModOut = qammod(x,M,"UnitAveragePower",true);%*sqrt(pin*100);
 %% OFDM
 ofdmModOut = ofdmmod(qamModOut/osf,fftLength,cycPrefLen,nullIdx,OversamplingFactor=osf);
 
-%spectrum(1024,fs, ofdmModOut,'pwelch')
+%spectrumPlot(1024,fs, ofdmModOut,'pwelch')
 
 
 data1 = zeros(length(ofdmModOut):2);
@@ -70,7 +70,7 @@ ofdmModOut = ofdmModOut*sqrt(pin*100*length(ofdmModOut))/norm(ofdmModOut);
 % 
 % out_memory = pa(ofdmModOut);
 % 
-% spectrum(1024,fs,out_memory,'pwelch',ofdmModOut,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',ofdmModOut,'pwelch')
 % return
 
 %% PA sem memória lookup table
@@ -79,7 +79,7 @@ ofdmModOut = ofdmModOut*sqrt(pin*100*length(ofdmModOut))/norm(ofdmModOut);
 %     'Table',paChar,'ReferenceImpedance',50);
 % 
 % out_memory = amplifier(ofdmModOut);
-% spectrum(1024,fs,out_memory,'pwelch',ofdmModOut,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',ofdmModOut,'pwelch')
 % return
 
 %% PA com memória
@@ -121,7 +121,7 @@ M_coeffs_CT = fitCoefMatMem;
 out_memory = pa_manual(ofdmModOut,fitCoefMatMem,'CT',5,5);
 % out_memory = pa_manual(results.InputWaveform,fitCoefMatMem,'MP',M,P);
 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory1,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory1,'pwelch')
 % return
 
 %% PLOT AM/AM e AM/PM
@@ -183,7 +183,7 @@ out_memory = pa_manual(ofdmModOut,fitCoefMatMem,'CT',5,5);
 % out_memory1 = synchronize(ofdmModOut,out_memory,1,0);
 out_memory = synchronize(ofdmModOut,out_memory,2,1,0);
 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory1,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory1,'pwelch')
 % return
 
 %% DPD
@@ -206,7 +206,7 @@ out_memory = synchronize(ofdmModOut,out_memory,2,1,0);
 % % coeffs = reshape(M_coeffs_MP.',[],1);
 % % out_memory_dpd = X*coeffs;
 % 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory_dpd,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_dpd,'pwelch')
 % return
 
 %% DPD IDEAL
@@ -237,7 +237,7 @@ out_memory = synchronize(ofdmModOut,out_memory,2,1,0);
 % 
 % out_memory_ideal = synchronize(u, out_memory_ideal, 2, 1);
 % 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory_ideal,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_ideal,'pwelch')
 % return
 
 %% Vetor de entrada
@@ -312,7 +312,7 @@ for i = 1:loop
 end
  
 
- % spectrum(1024,fs,out_memory,'pwelch',out_memory_LMS,'pwelch')
+ % spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_LMS,'pwelch')
  % return
 
  %% QKLMS
@@ -340,7 +340,7 @@ end
  % 
  % [a,~, y_PA,~] = QKLMS(X, out_memory, 0.5, 0.8, 0.6, 500);
  % 
- % spectrum(1024,fs,out_memory,'pwelch',y_PA,'pwelch')
+ % spectrumPlot(1024,fs,out_memory,'pwelch',y_PA,'pwelch')
  % return
  % 
  % % [~,~, ofdmModOut_QKLMS2,~] = QKLMS(Y, ofdmModOut_QKLMS, 0.1, 0.8, 0.6, 500);
@@ -408,36 +408,36 @@ end
  end
 
 
-%% Spectrum
+%% spectrumPlot
 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory_dpd,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_dpd,'pwelch')
 % title('DPD')
 
-spectrum(1024,fs, out_memory_QKRLS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
+spectrumPlot(1024,fs, out_memory_QKRLS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
 title('QKRLS')
 legend('Saída c/DPD','Entrada','Saída s/DPD')
 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory_QKRLS2,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_QKRLS2,'pwelch')
 % title('QKRLS2')
 
 % out_memory = out_memory*norm(out_memory_LMS)/norm(out_memory);
-spectrum(1024,fs, out_memory_LMS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
+spectrumPlot(1024,fs, out_memory_LMS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
 title('LMS')
 legend('Saída c/DPD','Entrada','Saída s/DPD')
 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory_QKLMS,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_QKLMS,'pwelch')
 % title('QKLMS')
 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory_QKLMS2,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_QKLMS2,'pwelch')
 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory_EXKRLS,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_EXKRLS,'pwelch')
 % title('EX-KRLS')
 
-spectrum(1024,fs, out_memory_EXQKRLS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
+spectrumPlot(1024,fs, out_memory_EXQKRLS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
 title('EX-QKRLS')
 legend('Saída c/DPD','Entrada','Saída s/DPD')
 
-% spectrum(1024,fs,out_memory,'pwelch',out_memory_EXQKRLS2,'pwelch')
+% spectrumPlot(1024,fs,out_memory,'pwelch',out_memory_EXQKRLS2,'pwelch')
 % title('EX-QKRLS2')
 
 %% Demodulação OFDM
