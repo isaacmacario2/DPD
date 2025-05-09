@@ -13,7 +13,7 @@ To carry out the second code, the following structure is used:
 
 # EX-QKRLS
 
-
+The main novelty of this repository is the EX-QKRLS algorithm. This algorithm is a version of EX-KRLS with quantization. The advantage of this algorithm is its shorter execution time compared to EX-KRLS. The pseudocode of EX-QKRLS can be seen in the following figure:
 
 # How to use
 
