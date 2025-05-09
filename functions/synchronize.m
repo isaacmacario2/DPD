@@ -1,4 +1,4 @@
-function y_sync = sincronize(x,y,flag1,flag2)
+function y_sync = synchronize(x,y,flag1,flag2)
 
     [c, lag] = xcorr(y, x);
     [~, I] = max(abs(c));
