@@ -23,7 +23,7 @@ qamModOut = qammod(x,M,"UnitAveragePower",true);%*sqrt(pin*100);
 %% OFDM
 ofdmModOut = ofdmmod(qamModOut/osf,fftLength,cycPrefLen,nullIdx,OversamplingFactor=osf);
 
-%espectro(1024,fs, ofdmModOut,'pwelch')
+%spectrum(1024,fs, ofdmModOut,'pwelch')
 
 
 data1 = zeros(length(ofdmModOut):2);
@@ -70,7 +70,7 @@ ofdmModOut = ofdmModOut*sqrt(pin*100*length(ofdmModOut))/norm(ofdmModOut);
 % 
 % out_memory = pa(ofdmModOut);
 % 
-% espectro(1024,fs,out_memory,'pwelch',ofdmModOut,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',ofdmModOut,'pwelch')
 % return
 
 %% PA sem memória lookup table
@@ -79,7 +79,7 @@ ofdmModOut = ofdmModOut*sqrt(pin*100*length(ofdmModOut))/norm(ofdmModOut);
 %     'Table',paChar,'ReferenceImpedance',50);
 % 
 % out_memory = amplifier(ofdmModOut);
-% espectro(1024,fs,out_memory,'pwelch',ofdmModOut,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',ofdmModOut,'pwelch')
 % return
 
 %% PA com memória
@@ -121,7 +121,7 @@ M_coeffs_CT = fitCoefMatMem;
 out_memory = pa_manual(ofdmModOut,fitCoefMatMem,'CT',5,5);
 % out_memory = pa_manual(results.InputWaveform,fitCoefMatMem,'MP',M,P);
 
-% espectro(1024,fs,out_memory,'pwelch',out_memory1,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory1,'pwelch')
 % return
 
 %% PLOT AM/AM e AM/PM
@@ -180,10 +180,10 @@ out_memory = pa_manual(ofdmModOut,fitCoefMatMem,'CT',5,5);
 
 
 %% Sincronização
-% out_memory1 = sincronize(ofdmModOut,out_memory,1,0);
-out_memory = sincronize(ofdmModOut,out_memory,2,1,0);
+% out_memory1 = synchronize(ofdmModOut,out_memory,1,0);
+out_memory = synchronize(ofdmModOut,out_memory,2,1,0);
 
-% espectro(1024,fs,out_memory,'pwelch',out_memory1,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory1,'pwelch')
 % return
 
 %% DPD
@@ -206,7 +206,7 @@ out_memory = sincronize(ofdmModOut,out_memory,2,1,0);
 % % coeffs = reshape(M_coeffs_MP.',[],1);
 % % out_memory_dpd = X*coeffs;
 % 
-% espectro(1024,fs,out_memory,'pwelch',out_memory_dpd,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory_dpd,'pwelch')
 % return
 
 %% DPD IDEAL
@@ -231,13 +231,13 @@ out_memory = sincronize(ofdmModOut,out_memory,2,1,0);
 % 
 % u = (wo'*IN).';
 % 
-% u = sincronize(input, u, 2, 1);
+% u = synchronize(input, u, 2, 1);
 % 
 % out_memory_ideal = pa_manual(u,fitCoefMatMem,'CT',5,5);
 % 
-% out_memory_ideal = sincronize(u, out_memory_ideal, 2, 1);
+% out_memory_ideal = synchronize(u, out_memory_ideal, 2, 1);
 % 
-% espectro(1024,fs,out_memory,'pwelch',out_memory_ideal,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory_ideal,'pwelch')
 % return
 
 %% Vetor de entrada
@@ -274,17 +274,17 @@ out_memory = sincronize(ofdmModOut,out_memory,2,1,0);
     
      % u = DPD_kernel(IN, a, D, 'Gauss_complex', sigma_k);
     
-     u = sincronize(ofdmModOut,u,2,1,0);
+     u = synchronize(ofdmModOut,u,2,1,0);
     
      % out_memory_QKRLS = rfpa(u);
      out_memory_QKRLS = pa_manual(u,fitCoefMatMem,'CT',5,5);
     
-     out_memory_QKRLS = sincronize(u,out_memory_QKRLS,2,1,0);
+     out_memory_QKRLS = synchronize(u,out_memory_QKRLS,2,1,0);
  end
 
 
  %% Sincronização
- % out_memory_QKRLS2 = sincronize(u2,out_memory_QKRLS2,1,1);
+ % out_memory_QKRLS2 = synchronize(u2,out_memory_QKRLS2,1,1);
 
  %% LMS
  IN = CT(ofdmModOut,5,5).';
@@ -303,16 +303,16 @@ for i = 1:loop
     % u = IN*w;
     u = (w'*IN).';
 
-    u = sincronize(ofdmModOut, u, 2, 1, 0);
+    u = synchronize(ofdmModOut, u, 2, 1, 0);
     
     % out_memory_LMS = rfpa(u);
     out_memory_LMS = pa_manual(u,fitCoefMatMem,'CT',5,5);
 
-    out_memory_LMS = sincronize(u, out_memory_LMS, 2, 1, 0);
+    out_memory_LMS = synchronize(u, out_memory_LMS, 2, 1, 0);
 end
  
 
- % espectro(1024,fs,out_memory,'pwelch',out_memory_LMS,'pwelch')
+ % spectrum(1024,fs,out_memory,'pwelch',out_memory_LMS,'pwelch')
  % return
 
  %% QKLMS
@@ -340,7 +340,7 @@ end
  % 
  % [a,~, y_PA,~] = QKLMS(X, out_memory, 0.5, 0.8, 0.6, 500);
  % 
- % espectro(1024,fs,out_memory,'pwelch',y_PA,'pwelch')
+ % spectrum(1024,fs,out_memory,'pwelch',y_PA,'pwelch')
  % return
  % 
  % % [~,~, ofdmModOut_QKLMS2,~] = QKLMS(Y, ofdmModOut_QKLMS, 0.1, 0.8, 0.6, 500);
@@ -397,47 +397,47 @@ end
 
      % [y_EXQKRLS,ofdmModOut_EXQKRLS,out_memory_EXQKRLS,~,~] = EX_QKRLS(X,out_memory,0.8,0.9999,0.01,0.995,1e-4,0.4, 500);
 
-     u = sincronize(ofdmModOut,u,2,1,0);
+     u = synchronize(ofdmModOut,u,2,1,0);
 
      % ofdmModOut_EXQKRLS = y_EXQKRLS - ofdmModOut;
 
      % out_memory_EXQKRLS = rfpa(u);
      out_memory_EXQKRLS = pa_manual(u,fitCoefMatMem,'CT',5,5);
 
-     out_memory_EXQKRLS = sincronize(u,out_memory_EXQKRLS,2,1,0);
+     out_memory_EXQKRLS = synchronize(u,out_memory_EXQKRLS,2,1,0);
  end
 
 
 %% Spectrum
 
-% espectro(1024,fs,out_memory,'pwelch',out_memory_dpd,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory_dpd,'pwelch')
 % title('DPD')
 
-espectro(1024,fs, out_memory_QKRLS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
+spectrum(1024,fs, out_memory_QKRLS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
 title('QKRLS')
 legend('Saída c/DPD','Entrada','Saída s/DPD')
 
-% espectro(1024,fs,out_memory,'pwelch',out_memory_QKRLS2,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory_QKRLS2,'pwelch')
 % title('QKRLS2')
 
 % out_memory = out_memory*norm(out_memory_LMS)/norm(out_memory);
-espectro(1024,fs, out_memory_LMS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
+spectrum(1024,fs, out_memory_LMS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
 title('LMS')
 legend('Saída c/DPD','Entrada','Saída s/DPD')
 
-% espectro(1024,fs,out_memory,'pwelch',out_memory_QKLMS,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory_QKLMS,'pwelch')
 % title('QKLMS')
 
-% espectro(1024,fs,out_memory,'pwelch',out_memory_QKLMS2,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory_QKLMS2,'pwelch')
 
-% espectro(1024,fs,out_memory,'pwelch',out_memory_EXKRLS,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory_EXKRLS,'pwelch')
 % title('EX-KRLS')
 
-espectro(1024,fs, out_memory_EXQKRLS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
+spectrum(1024,fs, out_memory_EXQKRLS, 'pwelch', ofdmModOut/norm(ofdmModOut),'pwelch',out_memory,'pwelch')
 title('EX-QKRLS')
 legend('Saída c/DPD','Entrada','Saída s/DPD')
 
-% espectro(1024,fs,out_memory,'pwelch',out_memory_EXQKRLS2,'pwelch')
+% spectrum(1024,fs,out_memory,'pwelch',out_memory_EXQKRLS2,'pwelch')
 % title('EX-QKRLS2')
 
 %% Demodulação OFDM
