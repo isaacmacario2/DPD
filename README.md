@@ -15,6 +15,15 @@ To carry out the second code, the following structure is used:
 
 The main novelty of this repository is the EX-QKRLS algorithm. This algorithm is a version of EX-KRLS with quantization. The advantage of this algorithm is its shorter execution time compared to EX-KRLS. The pseudocode of EX-QKRLS can be seen in the following figure:
 
+![image](https://github.com/user-attachments/assets/6387233f-0ea3-425e-9727-031fbb685ed1)
+
+Where the algorithm inputs are: The input vector (**u**), the forgetting factor (\lambda), the noise variance ratio (q), the scale factor for the transition matrix (\alpha), the regulation parameter (\Pi), the kernel bandwidth (\sigma_k) and the maximum value of \delta (\delta_{max}).
+
+The vector **D** represents the algorithm dictionary, whose function is to store all samples considered important by the Platt criterion.
+
+The details of each equation presented in the code are in the deduction.pdf file of this repository.
+
+
 # How to use
 
 Download this repository and leave all the codes in the same folder. For the DPD_RFWeblab.m code, an internet connection is required and the system status provided by the website https://dpdcompetition.com/rfweblab/ must be up and running.
