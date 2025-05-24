@@ -15,14 +15,11 @@ To carry out the second code, the following structure is used:
 
 The main novelty of this repository is the EX-QKRLS algorithm. This algorithm is a version of EX-KRLS with quantization. The advantage of this algorithm is its shorter execution time compared to EX-KRLS. The pseudocode of EX-QKRLS can be seen in the following figure:
 
-![image](https://github.com/user-attachments/assets/b6b0bec1-21f4-4fe7-b8e6-21c5b92b323c)
+![image](https://github.com/user-attachments/assets/179e39e2-1ac2-4e85-bbe5-87a4fd560800)
 
 Where the algorithm inputs are: The input vector (**u**), the forgetting factor (\lambda), the noise variance ratio (q), the scale factor for the transition matrix (\alpha), the regulation parameter (\Pi), the kernel bandwidth (\sigma_k) and the maximum value of \delta (\delta_{max}).
 
 The vector **D** represents the algorithm dictionary, whose function is to store all samples considered important by the Platt criterion.
-
-The details of each equation presented in the code are in the deduction.pdf file of this repository.
-
 
 # How to use
 
@@ -32,7 +29,7 @@ Download this repository and leave all the codes in the same folder. For the DPD
 
 D. R. Morgan, Z. Ma, J. Kim, M. G. Zierdt and J. Pastalan, "A Generalized Memory Polynomial Model for Digital Predistortion of RF Power Amplifiers", in IEEE Transactions on Signal Processing, vol. 54, no. 10, pp. 3852-3860, Oct. 2006.
 
-P. S. R. Diniz, "Adaptive Filtering: Algorithms and practical implementation}. 4. ed. New York: Springer, 2013.
+P. S. R. Diniz, "Adaptive Filtering: Algorithms and practical implementation". 4. ed. New York: Springer, 2013.
 
 J. A. Apolinário Jr., "QRD-RLS Adaptive Filtering". New York: Springer, 2009.
 
