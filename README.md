@@ -3,7 +3,7 @@ This repository is intended for the implementation of a Digital Pre-Distortion (
 
 The DPDs of this repository follow the Indirect Learning Architecture (ILA) model, as shown in the figure below.
 
-![image](https://github.com/user-attachments/assets/88d4966d-faad-475e-911e-1c4eeb7ce5e8)
+![image](https://github.com/user-attachments/assets/77435ed8-6f9f-4519-b3ce-f0df9a6dd405)
 
 In this repository, two codes for pre-distortion were made, the first is simulation.m, which uses a database of the NXP Airfast LDMOS Doherty PA power amplifier provided by Math Works at https://www.mathworks.com/help/comm/ug/power-amplifier-characterization.html. The second code, DPD_RFWeblab.m, is made with real data from the Cree CGH40006-TB amplifier, remotely, through the website https://dpdcompetition.com/rfweblab/.
 
