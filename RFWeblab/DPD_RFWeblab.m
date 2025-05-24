@@ -125,7 +125,7 @@ disp('RMSout = ')
 disp(RMSout)
 
 %% Sincronização
-y_sync = synchronize(ofdmModOut,y_amp,1,1,0);
+y_sync = syncnorm(ofdmModOut,y_amp,1,1,0);
 
 y_sync_nodpd = y_sync;
 
@@ -196,7 +196,7 @@ switch tipo
    
         [y_amp_dpd,~,~,~] = RFWebLab_PA_meas_v1_2(ofdmModOut_dpd, RMSin);
 
-        % y_sync_dpd = synchronize(ofdmModOut, y_amp, 1, 1, 1);
+        % y_sync_dpd = syncnorm(ofdmModOut, y_amp, 1, 1, 1);
 
         spectrumPlot(1024,fs_up,y_amp,'pwelch',y_amp_dpd,'pwelch')
         return
@@ -219,13 +219,13 @@ switch tipo
 
             u = (w'*X).';
 
-            u = synchronize(ofdmModOut, u, 0, 1, 0);  
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
             
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
         end
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
@@ -250,13 +250,13 @@ switch tipo
 
             u = (w'*X).';
 
-            u = synchronize(ofdmModOut, u, 1, 1, 0);
+            u = syncnorm(ofdmModOut, u, 1, 1, 0);
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
 
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
         end
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
@@ -280,13 +280,13 @@ switch tipo
             
             u = (w'*X).';
 
-            u = synchronize(ofdmModOut, u, 0, 1, 0);  
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
             
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
         end
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
@@ -330,7 +330,7 @@ switch tipo
 
             % PA
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
 
         end
 
@@ -352,13 +352,13 @@ switch tipo
            
             [a,D,~,~,u] = QKRLS(y_sync_dpd.', u, ofdmModOut.', 0.9999, 0.01, 1, 10000);
            
-            u = synchronize(ofdmModOut, u, 0, 1, 0);  
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
 
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
         end
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
@@ -376,13 +376,13 @@ switch tipo
 
             [~,D,~,~,u] = EX_QKRLS(y_sync_dpd.', u, ofdmModOut.', 0.9, 1, 0.01, 0.99999, 1e-4, 0.3, 10000);
 
-            u = synchronize(ofdmModOut, u, 0, 1, 0);  
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
 
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
         end
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
@@ -400,13 +400,13 @@ switch tipo
            
             [~,~,~,~,u] = QKLMS(y_sync_dpd.', u, ofdmModOut.', 0.5, 0.5, 0.3, 1000);
 
-            u = synchronize(ofdmModOut, u, 0, 1, 0);  
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
 
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
         end
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
@@ -429,13 +429,13 @@ switch tipo
 
             u = (w'*X).';
 
-            u = synchronize(ofdmModOut, u, 0, 1, 0);  
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
             
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
         end
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
@@ -459,13 +459,13 @@ switch tipo
 
             u = (w'*X).';
 
-            u = synchronize(ofdmModOut, u, 0, 1, 0);  
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
             
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
-            y_sync_dpd = synchronize(u, y_amp, 1, 1, 0);
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
         end
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
