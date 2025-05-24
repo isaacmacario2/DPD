@@ -21,6 +21,8 @@ Where the algorithm inputs are: The input vector (**u**), the forgetting factor 
 
 The vector **D** represents the algorithm dictionary, whose function is to store all samples considered important by the Platt criterion.
 
+The deductions of the EX-KRLS algorithm are presented in the article "Extended Kernel Recursive Least Squares Algorithm", and for the quantized version of KRLS, they are in the article "Quantized Kernel Recursive Least Squares Algorithm", both referenced below.
+
 # How to use
 
 Download this repository and leave all the codes in the same folder. For the DPD_RFWeblab.m code, an internet connection is required and the system status provided by the website https://dpdcompetition.com/rfweblab/ must be up and running.
@@ -41,6 +43,8 @@ A. Sayed, \textit{Adaptive Filters}. 1. ed. New Jersey: Wiley, 2008.
 
 J. Platt, "A resource-allocating network for function interpolation". in Neural Computation - NECO, v. 3, p. 213–225, 06 1991.
 
+W. Liu, I. Park, Y. Wang and J. C. Principe, "Extended Kernel Recursive Least Squares Algorithm", in IEEE Transactions on Signal Processing, vol. 57, no. 10, pp. 3801-3814, Oct. 2009.
+
 B. Chen, S. Zhao, P. Zhu and J. C. Príncipe, "Quantized Kernel Recursive Least Squares Algorithm", in IEEE Transactions on Neural Networks and Learning Systems, vol. 24, no. 9, pp. 1484-1491, Sept. 2013.
 
 C. Tarver, "GMP DPD Using Indirect Learning Architecture Matlab Library," sept. de 2019. Avalable in: <https://github.com/ctarver/ILA-DPD>. 
@@ -48,7 +52,7 @@ C. Tarver, "GMP DPD Using Indirect Learning Architecture Matlab Library," sept. 
 # How to Cite
 @misc{MacarioDPD,
   author       = {I. M. S. Gouveia, J. A. Apolinário Jr., C. A. B. Saunders Filho},
-  title        = {Pré-Distorção Digital Baseada em Kernel: Uma Abordagem com o Algoritmo EX-QKRLS},
+  title        = {Kernel-Based Digital Predistortion: An Approach with the EX-QKRLS Algorithm},
   month        = may,
   year         = 2025,
 }
