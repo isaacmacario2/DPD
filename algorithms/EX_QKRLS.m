@@ -37,7 +37,7 @@ for k = 2:N
     end
 
     % dist_min
-    if dist_min >= delta
+    if dist_min >= delta && size(D, 2) < Lmax
         D = [D X(:,k)];
         % h = [h; 1];
         z = Q*h;
@@ -52,19 +52,6 @@ for k = 2:N
         Q = (abs(alpha)^2)*[Q + z*z'*r_inv, -ro_inv*z*r_inv; (-ro_inv*z*r_inv)',ro_inv^2*r_inv];
 
         ro_inv = (abs(alpha)^2)*ro_inv + beta^(k)*q;
-
-        if size(D, 2) > Lmax
-            Ek = zeros(1, size(D, 2));
-            for l = 1:size(D, 2)
-                Ek(l) = abs(a(l)) * kernel_fun(X(:, k), D(:, l), 'Gauss_complex2', sigma_k);
-            end
-            [~, idx_remover] = min(Ek);
-
-            D(:, idx_remover) = [];
-            a(idx_remover) = [];
-            Q(idx_remover, :) = [];
-            Q(:, idx_remover) = [];
-        end
     else
         e = d(k) - h'*a;
         a(idx_min) = a(idx_min) + e;
@@ -74,3 +61,4 @@ for k = 2:N
 end
 
 return
+
