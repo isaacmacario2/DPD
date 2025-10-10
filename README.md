@@ -53,6 +53,7 @@ C. Tarver, "GMP DPD Using Indirect Learning Architecture Matlab Library," sept. 
 @misc{MacarioDPD,
   author       = {I. M. S. Gouveia, J. A. Apolinário Jr., C. A. B. Saunders Filho},
   title        = {Kernel-Based Digital Predistortion: An Approach with the EX-QKRLS Algorithm},
-  month        = may,
+  month        = september,
   year         = 2025,
+  doi          = {10.14209/sbrt.2025.1571151729}
 }
