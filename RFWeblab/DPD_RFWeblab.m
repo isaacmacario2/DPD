@@ -96,22 +96,15 @@ ofdmModOut = ofdmModOut / max(abs(ofdmModOut));
 
 
 %% Flag do sinal que vai ser utilizado
-flag = 0;
+flag = 2;
 
 %% OFDM CTARVER
 
 if flag == 1
     load('ofdmModOut_CTAVER.mat');
     fs_up = 200e6;
-
-    data3 = zeros(length(ofdmModOut):2);
-    for i = 1:length(ofdmModOut)
-        data3(i,1) = real(ofdmModOut(i));
-    end
-    for i = 1:length(ofdmModOut)
-        data3(i,2) = imag(ofdmModOut(i));
-    end
-    writematrix(data3,'data3.csv')
+elseif flag == 2
+    load('OFDM5G_5e6.mat');
 end
 %% Salvando a entrada 4
 ofdmModOut4 = ofdmModOut;
@@ -169,14 +162,16 @@ N = length(y_sync);
 %% Escolhendo o algoritmo
 % tipo = 1;  % comm.DPD
 % tipo = 2;  % LMS MP
-% tipo = 3;  % LMS Wiener
-% tipo = 4;  % LMS Volterra
+% tipo = 3;  % RLS Wiener-Hammerstein
+% tipo = 4;  % RLS Hammerstein-Wiener
 % tipo = 5;  % CTAVER
 % tipo = 6;  % QKRLS
 % tipo = 7;  % EX-QKRLS
 % tipo = 8;  % QKLMS
-% tipo = 9;  % RLS MPa
+% tipo = 9;  % RLS MP
 % tipo = 10; % RLS CT
+% tipo = 11; % EX-RLS
+% tipo = 12; % RFF-EX-RLS
 
 tipo = 10;
 
@@ -233,7 +228,7 @@ switch tipo
         % return
 
     case 3
-        %% LMS Wiener
+        %% RLS Wiener-Hammerstein
         X = WH(ofdmModOut,5,3,5).';
 
         loop = 1;
@@ -246,7 +241,7 @@ switch tipo
 
             Y = WH(y_sync_dpd,5,3,5).';
 
-            [~, ~, w] = LMS(Y, u, 0.05);
+            [~, ~, w] = RLS(Y, u, 0.9999);
 
             u = (w'*X).';
 
@@ -264,26 +259,27 @@ switch tipo
         % return
 
     case 4
-        %% LMS Volterra
-        X = volterra(ofdmModOut);
+        %% RLS Hammerstein-Wiener
+        X = HW(ofdmModOut,3,5).';
 
         loop = 1;
         u = ofdmModOut;
-        
+        % u = u * norm(u) / norm(y_sync);
+
         y_sync_dpd = y_sync;
 
         for i = 1:loop
 
-            Y = volterra_33(y_sync_dpd);
+            Y = HW(y_sync_dpd,3,5).';
 
-            [~, ~, w] = LMS(Y, u, 0.5);
-            
+            [~, ~, w] = RLS(Y, u, 0.9999);
+
             u = (w'*X).';
 
-            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
+            u = syncnorm(ofdmModOut, u, 1, 1, 0);
             u = u / max(abs(u));  % Normaliza amplitude
             u = u * norm(ofdmModOut) / norm(u);
-            
+
             [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
 
             y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
@@ -291,6 +287,7 @@ switch tipo
 
         spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
         legend('Saída c/DPD','Entrada','Saída s/DPD')
+        % return
 
     case 5
         %% CTARVER
@@ -472,6 +469,64 @@ switch tipo
         legend('Saída c/DPD','Entrada','Saída s/DPD')
         % return
 
+    case 11
+        %% EX-RLS
+        X = CT(ofdmModOut,3,5).';
+
+        loop = 1;
+        u = ofdmModOut;
+
+        y_sync_dpd = y_sync;
+
+        for i = 1:loop
+
+            Y = CT(y_sync_dpd,3,5).';
+
+            [~,~,w] = EXRLS(Y, u, 0.99999, 1e-1, 1, 1, 1, 0);
+            %[~,~,w] = H_EX_RLS(Y, u, 0.99999, 1e-1, 1, 1, 1, 1, 0);
+            %[~,~,w] = G_EX_RLS(Y, u, 0.99999, 1e-1, 1, 1, 1, 1, 0);
+
+            u = (w'*X).';
+
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
+            u = u / max(abs(u));  % Normaliza amplitude
+            u = u * norm(ofdmModOut) / norm(u);
+            
+            [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
+
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
+        end
+
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        legend('Saída c/DPD','Entrada','Saída s/DPD')
+        % return
+
+    case 12
+        %% DPD RFF-EX-RLS
+
+        loop = 1;
+        u = ofdmModOut;
+        % u = u / norm(u);
+        y_sync_dpd = y_sync;
+        X = MP(ofdmModOut,3,1).';
+
+        for i = 1:loop
+            Y = MP(y_sync_dpd,3,1).';
+            
+            [~,~,u,~] = EX_RFF_RLS(Y, u, X, 1, 200, 1, 0.9999, 1e-1,1e-1,1,1);
+
+            u = syncnorm(ofdmModOut, u, 0, 1, 0);  
+            u = u / max(abs(u));  % Normaliza amplitude
+            u = u * norm(ofdmModOut) / norm(u);
+
+            [y_amp,~,~,~] = RFWebLab_PA_meas_v1_2(u, RMSin);
+
+            y_sync_dpd = syncnorm(u, y_amp, 1, 1, 0);
+        end
+
+        spectrumPlot(1024,fs_up,y_sync_dpd,'pwelch',ofdmModOut,'pwelch',y_sync_nodpd,'pwelch')
+        legend('Saída c/DPD','Entrada','Saída s/DPD')
+
 end
 
 
@@ -628,26 +683,72 @@ function X = HP(x, M, P)
 end
 
 function X = WH(x, M1, P, M2)
-% x: Sinal de entrada
-% M1: Ordem do primeiro filtro FIR
-% P: Ordem do polinômio não linear
-% M2: Ordem do segundo filtro FIR
+    % M1 = número de atrasos do filtro de entrada
+    % P  = ordem da não-linearidade
+    % M2 = número de atrasos do filtro de saída
+    
+    N = length(x);
 
-    % Primeiro filtro FIR
-    h1 = fir1(M1-1, 0.4); 
-    x_filt1 = filter(h1, 1, x);
-
-    % Bloco não linear
-    X_nl = zeros(length(x_filt1), P);
-    for p = 1:P
-        X_nl(:, p) = x_filt1 .* abs(x_filt1).^(p-1);
+    % --- PRIMEIRO FILTRO LINEAR ---
+    X_lin1 = zeros(N, M1);
+    for m = 1:M1
+        delayed = zeros(N,1);
+        delayed(m:end) = x(1:end-m+1);
+        X_lin1(:, m) = delayed;
     end
 
-    % Segundo filtro FIR
-    h2 = fir1(M2-1, 0.4);
-    X = filter(h2, 1, X_nl);
+    % --- BLOCO NÃO LINEAR (tipo MP) ---
+    X_nl = [];
+    for p = 1:P
+        X_nl = [X_nl, X_lin1 .* abs(X_lin1).^(p-1)];
+    end
 
+    % --- SEGUNDO FILTRO LINEAR ---
+    total_branches = size(X_nl, 2);
+    X = zeros(N, total_branches * M2);
+    col = 1;
+
+    for b = 1:total_branches
+        branch = X_nl(:, b);
+        for m = 1:M2
+            delayed = zeros(N,1);
+            delayed(m:end) = branch(1:end-m+1);
+            X(:, col) = delayed;
+            col = col + 1;
+        end
+    end
 end
+
+
+function X = HW(x, M, P)
+    % --- BLOCO NÃO LINEAR DE ENTRADA (Tipo MP) ---
+    X_nl = [];
+    for p = 1:P
+        X_nl = [X_nl, x .* abs(x).^(p-1)];
+    end
+    
+    % --- BLOCO LINEAR (FIR) ---
+    N = length(x);
+    X_lin = zeros(N, M*P);
+    col = 1;
+    for p = 1:P
+        branch = X_nl(:, p);
+        for m = 1:M
+            delayed = zeros(N,1);
+            delayed(m:end) = branch(1:end-m+1);
+            X_lin(:, col) = delayed;
+            col = col + 1;
+        end
+    end
+
+    % --- BLOCO NÃO LINEAR DE SAÍDA ---
+    % (Aplica AM-PM ou potência não linear sobre cada coluna)
+    X = [];
+    for p = 1:P
+        X = [X, X_lin .* abs(X_lin).^(p-1)];
+    end
+end
+
 
 function beta = ls_estimation(X, y)
     %ls_estimation
@@ -695,4 +796,5 @@ function X_volterra = volterra(x, P, M)
         end
     end
 end
+
 
